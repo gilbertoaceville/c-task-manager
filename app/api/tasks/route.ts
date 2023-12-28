@@ -12,8 +12,7 @@ export async function POST(req: Request) {
         status: 401,
       });
 
-    const { title, description, date, done, priority } =
-      await req.json();
+    const { title, description, date, done, priority } = await req.json();
 
     if (!title || !description || !date)
       return NextResponse.json({
@@ -27,7 +26,7 @@ export async function POST(req: Request) {
         status: 400,
       });
 
-    const task = prisma.task.create({
+    const task = await prisma.task.create({
       data: {
         title,
         date,
@@ -48,8 +47,23 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
+    const { userId } = auth();
+
+    if (!userId)
+      return NextResponse.json({
+        error: "You are not authorized",
+        status: 401,
+      }); 
+
+    const tasks = await prisma.task.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    return NextResponse.json(tasks);
   } catch (error) {
     console.log("Error getting task:", error);
     return NextResponse.json({
