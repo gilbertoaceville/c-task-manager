@@ -9,19 +9,19 @@ export const menuItems = [
   },
   {
     id: 2,
-    title: "Important!",
+    title: "Essential!",
     icon: list,
-    link: "/important",
+    link: "/essential",
   },
   {
     id: 3,
-    title: "Completed!",
+    title: "Completed",
     icon: check,
     link: "/completed",
   },
   {
     id: 4,
-    title: "Do It Now",
+    title: "Take Action",
     icon: todo,
     link: "/incomplete",
   },

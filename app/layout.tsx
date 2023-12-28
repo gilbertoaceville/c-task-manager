@@ -4,7 +4,9 @@ import { Inter } from "next/font/google";
 import "@/base/styles/globals.css";
 import SideBar from "@/components/sections/side-bar";
 import GlobalStyleProvider from "@/base/providers/GlobalStyleProvider";
-import Providers from "./base/providers/providers";
+import Providers from "@/base/providers/providers";
+import AuthProvider from "@/base/providers/AuthProvider";
+import { auth } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,27 +20,30 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { userId } = auth();
+
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-      </head>
-      <body className={inter.className}>
-        <Providers>
-          <GlobalStyleProvider>
-            <div className="relative">
-              <SideBar />
-            </div>
-            {children}
-          </GlobalStyleProvider>
-        </Providers>
-      </body>
-    </html>
+    // AuthProvider contains the ClerkProvider (an auth package) wrapping the root according to docs
+    <AuthProvider>
+      <html lang="en">
+        <head>
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
+          />
+        </head>
+        <body className={inter.className}>
+          <Providers>
+            <GlobalStyleProvider>
+              <div className="relative">{userId && <SideBar />}</div>
+              <div className="w-full">{children}</div>
+            </GlobalStyleProvider>
+          </Providers>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

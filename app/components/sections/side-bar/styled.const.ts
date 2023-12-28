@@ -169,7 +169,7 @@ export const StyledSideBar = styled.nav<{ collapsed?: boolean }>`
       top: 0;
       width: 0%;
       height: 100%;
-      background-color: ${(props) => props.theme.colorGreenDark};
+      background-color: ${(props) => props.theme.colorPrimary};
 
       border-bottom-left-radius: 5px;
       border-top-left-radius: 5px;

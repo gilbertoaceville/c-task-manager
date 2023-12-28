@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { UniversalProvider } from "../context/universalProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
