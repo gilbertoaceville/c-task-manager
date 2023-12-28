@@ -9,15 +9,15 @@ export const menuItems = [
   },
   {
     id: 2,
-    title: "Essential!",
+    title: "Priority!",
     icon: list,
-    link: "/essential",
+    link: "/priority",
   },
   {
     id: 3,
-    title: "Completed",
+    title: "Done",
     icon: check,
-    link: "/completed",
+    link: "/done",
   },
   {
     id: 4,

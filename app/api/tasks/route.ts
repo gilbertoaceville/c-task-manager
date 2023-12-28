@@ -12,7 +12,8 @@ export async function POST(req: Request) {
         status: 401,
       });
 
-    const { title, description, date, completed, important } = await req.json();
+    const { title, description, date, done, priority } =
+      await req.json();
 
     if (!title || !description || !date)
       return NextResponse.json({
@@ -31,8 +32,8 @@ export async function POST(req: Request) {
         title,
         date,
         description,
-        isCompleted: completed,
-        isImportant: important,
+        isDone: done,
+        isPriority: priority,
         userId,
       },
     });
