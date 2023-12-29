@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UniversalProvider } from "../context/universalProvider";
 import { Toaster } from "react-hot-toast";
+
+import { UniversalProvider } from "../context/universalProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,11 +17,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return isLoaded ? (
-    <UniversalProvider>
+    <UniversalProvider fetchData>
       {children}
       <Toaster />
     </UniversalProvider>
   ) : (
-    <p />
+    <span data-variant="center" className="loader" />
   );
 }

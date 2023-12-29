@@ -7,6 +7,7 @@ export const StyledButton = styled.button`
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-weight: 500;
+  font-size: 1.2rem;
   border: none;
   color: ${(props) => props.theme.colorGrey0};
   z-index: 5;
@@ -17,8 +18,12 @@ export const StyledButton = styled.button`
   &[data-variant="primary"] {
     padding: 0.8rem 2rem;
     border-radius: 0.8rem;
-    font-size: 1.2rem;
     background: ${(props)=> props.theme.colorPrimary};
+  }
+
+  &[data-variant="secondary"] {
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.8rem;
   }
 
   i {

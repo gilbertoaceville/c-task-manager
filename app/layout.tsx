@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 import "@/base/styles/globals.css";
+import { auth } from "@clerk/nextjs";
 import SideBar from "@/components/sections/side-bar";
 import GlobalStyleProvider from "@/base/providers/GlobalStyleProvider";
 import Providers from "@/base/providers/providers";
 import AuthProvider from "@/base/providers/AuthProvider";
-import { auth } from "@clerk/nextjs";
+import { loaderConfig } from "@/base/constants/loader.config";
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -35,7 +37,8 @@ export default function RootLayout({
             referrerPolicy="no-referrer"
           />
         </head>
-        <body className={inter.className}>
+        <body className={roboto.className}>
+          <NextTopLoader {...loaderConfig} />
           <Providers>
             <GlobalStyleProvider>
               <div className="relative">{userId && <SideBar />}</div>

@@ -10,7 +10,7 @@ import Button from "@/components/elements/button";
 import { StyledTaskForm } from "./styled.const";
 
 export default function TaskForm() {
-  const { theme } = useUniversalContext();
+  const { theme, createTask } = useUniversalContext();
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
@@ -33,18 +33,7 @@ export default function TaskForm() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-
-    try {
-      const response = await axios.post("/api/tasks", formValues);
-
-      if (response.data.error) {
-        toast.error(response.data.error);
-      }
-
-      toast.success("Created Task!");
-    } catch (error) {
-      console.log("Something is not right!", error);
-    }
+    createTask?.(formValues);
   }
 
   return (

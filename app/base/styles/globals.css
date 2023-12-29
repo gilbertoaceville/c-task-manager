@@ -9,7 +9,7 @@
   --background-primary: #181818;
 
   --color-text-primary: #ffffff;
-  --color-green: #27ae60;
+  --color-primary: #7263f3;
 }
 
 @media (prefers-color-scheme: feSpotLight) {
@@ -54,12 +54,19 @@ input[type="checkbox"] {
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid var(--color-green);
+  border: 5px solid var(--color-primary);
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
+}
+
+.loader[data-variant="center"] {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes rotation {

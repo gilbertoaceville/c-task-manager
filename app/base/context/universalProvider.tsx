@@ -1,36 +1,97 @@
 import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
-import axios from "axios";
+
+import { Task } from "@/base/types/task";
 
 import themes from "./themes";
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface ContextProps {
   theme?: Record<string, string | any>;
+  tasks?: Task[];
+  doneTasks?: Task[];
+  priorityTasks?: Task[];
+  incompleteTasks?: Task[];
+  isLoading?: boolean;
+  deleteTask?: (id: string) => void;
+  createTask?: (data: any) => void;
 }
 
-export const UniversalContext = createContext<ContextProps>({ theme: {} });
+export const UniversalContext = createContext<ContextProps>({
+  theme: {},
+});
 export const UniversalUpdateContext = createContext(null);
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
-export function UniversalProvider({ children }: { children: React.ReactNode }) {
+export function UniversalProvider({
+  children,
+  fetchData,
+}: {
+  children: React.ReactNode;
+  fetchData?: boolean;
+}) {
+  const { user } = useUser();
   const [indexOfSelectedTheme, setIndexOfSelectedTheme] = useState(0);
-  const [tasks, setTasks] = useState([]);
-  // const [fetchData, setFetchData] = useState(false);
 
-  // const { data, isLoading, error } = useSWR(
-  //   fetchData ? "/api/tasks" : null,
-  //   fetcher
-  // );
-  // const dataArray = isLoading ? [] : data;
+  const { data, mutate, isLoading } = useSWR(
+    fetchData ? "/api/tasks" : null,
+    fetcher,
+    {
+      revalidateIfStale: false,
+    }
+  );
 
-  function getAllTasks() {
-    const data = axios.get("/api/tasks");
+  const results = user ? data : [];
+  const tasks: Task[] = isLoading ? [] : results;
+
+  async function createTask(formValues: any) {
+    try {
+      const response = await axios.post("/api/tasks", formValues);
+
+      if (response.data.error) {
+        toast.error(response.data.error);
+      } else {
+        toast.success("Created Task!");
+      }
+
+      mutate();
+    } catch (error) {
+      console.log("Something is not right!", error);
+    }
   }
 
+  async function deleteTask(id: string) {
+    try {
+      const response = await axios.delete(`/api/tasks/${id}`);
+      toast.success("Task Deleted");
+
+      mutate();
+    } catch (error) {
+      console.error(error);
+      toast.error("Error deleting task");
+    }
+  }
+
+  const doneTasks = tasks?.filter((task) => task?.isDone);
+  const priorityTasks = tasks?.filter((task) => task?.isPriority);
+  const incompleteTasks = tasks?.filter((task) => !task?.isDone);
 
   return (
-    <UniversalContext.Provider value={{ theme: themes[indexOfSelectedTheme] }}>
-      <UniversalUpdateContext.Provider value={{ } as any}>
+    <UniversalContext.Provider
+      value={{
+        theme: themes[indexOfSelectedTheme],
+        tasks,
+        isLoading,
+        doneTasks,
+        deleteTask,
+        createTask,
+        priorityTasks,
+        incompleteTasks,
+      }}
+    >
+      <UniversalUpdateContext.Provider value={{} as any}>
         {children}
       </UniversalUpdateContext.Provider>
     </UniversalContext.Provider>
