@@ -55,7 +55,7 @@ export async function GET() {
       return NextResponse.json({
         error: "You are not authorized",
         status: 401,
-      }); 
+      });
 
     const tasks = await prisma.task.findMany({
       where: {
@@ -73,23 +73,32 @@ export async function GET() {
   }
 }
 
-export async function UPDATE(req: Request) {
+export async function PUT(req: Request) {
   try {
+    const { userId } = auth();
+
+    if (!userId)
+      return NextResponse.json({
+        error: "You are not authorized",
+        status: 401,
+      });
+
+    const { id, isDone } = await req.json();
+
+    const updateTask = await prisma.task.update({
+      where: {
+        id,
+      },
+      data: {
+        isDone,
+      },
+    });
+
+    return NextResponse.json(updateTask);
   } catch (error) {
     console.log("Error updating task:", error);
     return NextResponse.json({
       error: "Failed! Could not update task",
-      status: 500,
-    });
-  }
-}
-
-export async function DELETE(req: Request) {
-  try {
-  } catch (error) {
-    console.log("Error deleting task:", error);
-    return NextResponse.json({
-      error: "Failed! Could not delete task",
       status: 500,
     });
   }

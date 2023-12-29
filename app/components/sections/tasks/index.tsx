@@ -6,9 +6,12 @@ import { add, plus } from "@/base/constants/icons.const";
 import TaskForm from "@/components/modules/task-form";
 import { TaskProps } from "./types";
 import TaskItem from "./component/task-item";
+import { Dialog, DialogContent } from "@/ui/dialog";
+import { useState } from "react";
 
 export default function Tasks({ title, tasks }: TaskProps) {
   const { theme, isLoading } = useUniversalContext();
+  const [open, setOpen] = useState(false);
 
   return (
     <StyledTasks theme={theme}>
@@ -24,13 +27,17 @@ export default function Tasks({ title, tasks }: TaskProps) {
             <span className="loader"></span>
           </div>
         )}
-        <button className="create-task">
+        <button onClick={()=> setOpen(true)} className="create-task">
           {add}
           Add New Task
         </button>
       </div>
 
-      <TaskForm />
+      <Dialog open={open} onOpenChange={(close) => setOpen(close)}>
+        <DialogContent forceMount={true} size="xl">
+          <TaskForm />
+        </DialogContent>
+      </Dialog>
     </StyledTasks>
   );
 }

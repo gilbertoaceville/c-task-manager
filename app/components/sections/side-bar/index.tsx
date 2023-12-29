@@ -7,22 +7,17 @@ import Image from "next/image";
 
 import { useUniversalContext } from "@/base/context/universalProvider";
 import { menuItems } from "@/base/constants/menu.const";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, UserButton } from "@clerk/nextjs";
 import Button from "@/components/elements/button";
 import { logout } from "@/base/constants/icons.const";
 
 import { StyledSideBar } from "./styled.const";
 
-export default function Sidebar({
-  firstName = "John",
-  lastName = "Doe",
-  menu = menuItems,
-  imageUrl = "/profile.png",
-}) {
+export default function Sidebar({ menu = menuItems }) {
   const { theme } = useUniversalContext();
   const router = useRouter();
   const pathname = usePathname();
-  const { signOut } = useClerk();
+  const { signOut, user } = useClerk();
 
   function handleClick(link: string) {
     router.push(link);
@@ -40,13 +35,18 @@ export default function Sidebar({
       <div className="profile">
         <div className="profile-overlay"></div>
         <div className="image">
-          <Image width={70} height={70} src={imageUrl} alt={"profile"} />
+          <Image
+            width={70}
+            height={70}
+            src={user?.imageUrl || "/profile.png"}
+            alt={"profile"}
+          />
         </div>
         <div className="user-btn absolute z-20 top-0 w-full h-full">
-          {/* <UserButton /> */}
+          <UserButton />
         </div>
         <h1 className="capitalize">
-          {firstName} {lastName}
+          {user?.firstName} {user?.lastName}
         </h1>
       </div>
       <ul className="nav-items">

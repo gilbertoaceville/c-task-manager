@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const StyledSideBar = styled.nav<{ collapsed?: boolean }>`
-  position: sticky;
-  top: 40px;
+  position: relative;
+  /* min-height: calc(100vh - 5rem); */
   width: ${(props) => props.theme.sidebarWidth};
   background-color: ${(props) => props.theme.colorBg2};
   border: 2px solid ${(props) => props.theme.borderColor2};
@@ -16,7 +16,7 @@ export const StyledSideBar = styled.nav<{ collapsed?: boolean }>`
 
   @media screen and (max-width: 768px) {
     position: fixed;
-    min-height: calc(100vh - 2rem);
+    height: calc(100vh - 2rem);
     z-index: 100;
 
     transition: all 0.3s cubic-bezier(0.53, 0.21, 0, 1);

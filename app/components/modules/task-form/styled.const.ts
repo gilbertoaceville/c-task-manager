@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const StyledTaskForm = styled.form`
+  background: ${(props) => props.theme.colorBg};
+
   > h1 {
     font-size: clamp(1.2rem, 5vw, 1.6rem);
     font-weight: 600;

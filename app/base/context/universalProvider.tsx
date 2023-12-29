@@ -17,6 +17,7 @@ interface ContextProps {
   isLoading?: boolean;
   deleteTask?: (id: string) => void;
   createTask?: (data: any) => void;
+  updateTask?: (task: Task) => void;
 }
 
 export const UniversalContext = createContext<ContextProps>({
@@ -74,6 +75,18 @@ export function UniversalProvider({
     }
   }
 
+  async function updateTask(task: Pick<Task, "id" | "isDone">) {
+    try {
+      const response = await axios.put(`/api/tasks`, task);
+      toast.success("Task Updated");
+
+      mutate();
+    } catch (error) {
+      console.error(error);
+      toast.error("Error updating task");
+    }
+  }
+
   const doneTasks = tasks?.filter((task) => task?.isDone);
   const priorityTasks = tasks?.filter((task) => task?.isPriority);
   const incompleteTasks = tasks?.filter((task) => !task?.isDone);
@@ -87,6 +100,7 @@ export function UniversalProvider({
         doneTasks,
         deleteTask,
         createTask,
+        updateTask,
         priorityTasks,
         incompleteTasks,
       }}

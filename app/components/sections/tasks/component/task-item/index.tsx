@@ -13,13 +13,26 @@ export default function TaskItem({
   date,
   isDone,
 }: Task) {
-  const { theme, deleteTask } = useUniversalContext();
+  const { theme, deleteTask, updateTask } = useUniversalContext();
+
+  async function handleUpdate() {
+    const task = {
+      id,
+      isDone: !isDone,
+    };
+
+    await updateTask?.(task);
+  }
 
   function renderButton() {
     return isDone ? (
-      <button className="done">Done</button>
+      <button className="done" onClick={handleUpdate}>
+        Done
+      </button>
     ) : (
-      <button className="incomplete">Not Done</button>
+      <button className="incomplete" onClick={handleUpdate}>
+        Not Done
+      </button>
     );
   }
 
@@ -27,7 +40,7 @@ export default function TaskItem({
     <StyledTaskItem theme={theme}>
       <h1>{title}</h1>
       <p>{description}</p>
-      <p className="date">{formatDate(date)}</p>
+      <p className="date">{formatDate(date as string)}</p>
       <div className="task-footer">
         {renderButton()}
         <button className="edit">{edit}</button>
