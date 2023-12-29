@@ -1,7 +1,12 @@
 import styled from "styled-components";
 
 export const StyledTaskForm = styled.form`
-  background: ${(props) => props.theme.colorBg};
+  &[data-is-edit="true"] {
+    .date,
+    .complete {
+      display: none;
+    }
+  }
 
   > h1 {
     font-size: clamp(1.2rem, 5vw, 1.6rem);
@@ -42,7 +47,7 @@ export const StyledTaskForm = styled.form`
   }
 
   .submit-btn button {
-    transition: all 0.35s ease-in-out;
+    transition: all 0.1s ease-in-out;
 
     @media screen and (max-width: 500px) {
       font-size: 0.9rem !important;

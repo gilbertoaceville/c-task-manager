@@ -9,12 +9,12 @@ import { useUniversalContext } from "@/base/context/universalProvider";
 import { menuItems } from "@/base/constants/menu.const";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import Button from "@/components/elements/button";
-import { logout } from "@/base/constants/icons.const";
+import { arrowLeft, bars, logout } from "@/base/constants/icons.const";
 
 import { StyledSideBar } from "./styled.const";
 
 export default function Sidebar({ menu = menuItems }) {
-  const { theme } = useUniversalContext();
+  const { theme, isOpenedMenu, handleOpenMenu } = useUniversalContext();
   const router = useRouter();
   const pathname = usePathname();
   const { signOut, user } = useClerk();
@@ -28,10 +28,10 @@ export default function Sidebar({ menu = menuItems }) {
   }
 
   return (
-    <StyledSideBar theme={theme}>
-      {/* <button className="toggle-nav" onClick={collapseMenu}>
-        {collapsed ? bars : arrowLeft}
-      </button> */}
+    <StyledSideBar isOpenedMenu={isOpenedMenu} theme={theme}>
+      <button className="toggle-nav" onClick={handleOpenMenu}>
+        {isOpenedMenu ? bars : arrowLeft}
+      </button>
       <div className="profile">
         <div className="profile-overlay"></div>
         <div className="image">

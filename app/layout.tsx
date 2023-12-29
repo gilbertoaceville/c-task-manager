@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 
 import "@/base/styles/globals.css";
@@ -10,7 +10,7 @@ import Providers from "@/base/providers/providers";
 import AuthProvider from "@/base/providers/AuthProvider";
 import { loaderConfig } from "@/base/constants/loader.config";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -37,7 +37,7 @@ export default function RootLayout({
             referrerPolicy="no-referrer"
           />
         </head>
-        <body className={roboto.className}>
+        <body className={montserrat.className}>
           <NextTopLoader {...loaderConfig} />
           <Providers>
             <GlobalStyleProvider>

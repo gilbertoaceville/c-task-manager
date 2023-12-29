@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledSideBar = styled.nav<{ collapsed?: boolean }>`
+export const StyledSideBar = styled.nav<{ isOpenedMenu?: boolean }>`
   position: relative;
   /* min-height: calc(100vh - 5rem); */
   width: ${(props) => props.theme.sidebarWidth};
@@ -21,7 +21,7 @@ export const StyledSideBar = styled.nav<{ collapsed?: boolean }>`
 
     transition: all 0.3s cubic-bezier(0.53, 0.21, 0, 1);
     transform: ${(props) =>
-      props.collapsed ? "translateX(-107%)" : "translateX(0)"};
+      props.isOpenedMenu ? "translateX(-107%)" : "translateX(0)"};
 
     .toggle-nav {
       display: block !important;

@@ -1,4 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useState,
+} from "react";
 import useSWR from "swr";
 
 import { Task } from "@/base/types/task";
@@ -14,10 +20,18 @@ interface ContextProps {
   doneTasks?: Task[];
   priorityTasks?: Task[];
   incompleteTasks?: Task[];
+  oneTask?: Task;
   isLoading?: boolean;
+  getOneTask?: (id: string) => void;
   deleteTask?: (id: string) => void;
   createTask?: (data: any) => void;
   updateTask?: (task: Task) => void;
+  modal?: boolean;
+  editModal?: boolean;
+  setModal?: Dispatch<SetStateAction<boolean>>;
+  setEditModal?: Dispatch<SetStateAction<boolean>>;
+  isOpenedMenu?: boolean;
+  handleOpenMenu?: () => void;
 }
 
 export const UniversalContext = createContext<ContextProps>({
@@ -35,6 +49,10 @@ export function UniversalProvider({
 }) {
   const { user } = useUser();
   const [indexOfSelectedTheme, setIndexOfSelectedTheme] = useState(0);
+  const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [isOpenedMenu, setIsOpenedMenu] = useState(false);
+  const [oneTask, setOneTask] = useState<Task>({});
 
   const { data, mutate, isLoading } = useSWR(
     fetchData ? "/api/tasks" : null,
@@ -44,8 +62,15 @@ export function UniversalProvider({
     }
   );
 
-  const results = user ? data : [];
-  const tasks: Task[] = isLoading ? [] : results;
+  const results: Task[] = user ? data : [];
+  const tasks = isLoading
+    ? []
+    : results?.sort((a, b) => {
+        // Use the nullish coalescing operator to handle potential undefined values
+        const dateA = new Date(a.createdAt ?? 0).getTime();
+        const dateB = new Date(b.createdAt ?? 0).getTime();
+        return dateB - dateA;
+      });
 
   async function createTask(formValues: any) {
     try {
@@ -58,6 +83,7 @@ export function UniversalProvider({
       }
 
       mutate();
+      setModal(false);
     } catch (error) {
       console.log("Something is not right!", error);
     }
@@ -75,16 +101,32 @@ export function UniversalProvider({
     }
   }
 
-  async function updateTask(task: Pick<Task, "id" | "isDone">) {
+  async function updateTask(task: Task) {
     try {
       const response = await axios.put(`/api/tasks`, task);
-      toast.success("Task Updated");
+
+      if (response.data.error) {
+        toast.error(response.data.error);
+      } else {
+        toast.success("Task Updated");
+      }
+
+      if(editModal) setEditModal(false);
 
       mutate();
     } catch (error) {
       console.error(error);
       toast.error("Error updating task");
     }
+  }
+
+  function handleOpenMenu() {
+    setIsOpenedMenu?.(!isOpenedMenu);
+  }
+
+  function getOneTask(id: string) {
+    const task = tasks?.find((task) => task.id === id);
+    setOneTask(task as Task);
   }
 
   const doneTasks = tasks?.filter((task) => task?.isDone);
@@ -98,11 +140,19 @@ export function UniversalProvider({
         tasks,
         isLoading,
         doneTasks,
+        oneTask,
+        getOneTask,
         deleteTask,
         createTask,
         updateTask,
         priorityTasks,
         incompleteTasks,
+        modal,
+        setModal,
+        editModal,
+        setEditModal,
+        isOpenedMenu,
+        handleOpenMenu,
       }}
     >
       <UniversalUpdateContext.Provider value={{} as any}>

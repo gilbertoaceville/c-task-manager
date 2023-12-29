@@ -7,17 +7,17 @@ import TaskForm from "@/components/modules/task-form";
 import { TaskProps } from "./types";
 import TaskItem from "./component/task-item";
 import { Dialog, DialogContent } from "@/ui/dialog";
-import { useState } from "react";
 
 export default function Tasks({ title, tasks }: TaskProps) {
-  const { theme, isLoading } = useUniversalContext();
-  const [open, setOpen] = useState(false);
+  const { theme, isLoading, modal, setModal } = useUniversalContext();
 
   return (
     <StyledTasks theme={theme}>
       <h1>{title}</h1>
 
-      <button className="btn-rounded">{plus}</button>
+      <button className="btn-rounded" onClick={() => setModal?.(true)}>
+        {plus}
+      </button>
 
       <div className="tasks grid">
         {!isLoading ? (
@@ -27,15 +27,15 @@ export default function Tasks({ title, tasks }: TaskProps) {
             <span className="loader"></span>
           </div>
         )}
-        <button onClick={()=> setOpen(true)} className="create-task">
+        <button onClick={() => setModal?.(true)} className="create-task">
           {add}
           Add New Task
         </button>
       </div>
 
-      <Dialog open={open} onOpenChange={(close) => setOpen(close)}>
+      <Dialog open={modal} onOpenChange={(close) => setModal?.(close)}>
         <DialogContent forceMount={true} size="xl">
-          <TaskForm />
+          <TaskForm title="Create a Task" btnText="Create Task" />
         </DialogContent>
       </Dialog>
     </StyledTasks>

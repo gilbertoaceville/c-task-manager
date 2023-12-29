@@ -6,4 +6,6 @@ export interface Task {
   isDone?: boolean;
   isPriority?: boolean;
   userId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

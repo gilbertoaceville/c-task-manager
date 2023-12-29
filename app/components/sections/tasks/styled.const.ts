@@ -84,4 +84,8 @@ export const StyledTasks = styled.main`
       color: ${(props) => props.theme.colorGrey0};
     }
   }
+
+  .modal {
+    background: ${(props) => props.theme.colorBg};
+  }
 `;

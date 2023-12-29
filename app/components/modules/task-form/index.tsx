@@ -1,23 +1,28 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import toast from "react-hot-toast";
-import axios from "axios";
 
 import { useUniversalContext } from "@/base/context/universalProvider";
 import Button from "@/components/elements/button";
+import { plus } from "@/base/constants/icons.const";
 
 import { StyledTaskForm } from "./styled.const";
+import { TaskFormProps } from "./types";
 
-export default function TaskForm() {
-  const { theme, createTask } = useUniversalContext();
+export default function TaskForm({ isEdit, title, btnText }: TaskFormProps) {
+  const { theme, createTask, oneTask, updateTask } =
+  useUniversalContext();
+
+  const task = isEdit ? oneTask : {};
   const [formValues, setFormValues] = useState({
-    title: "",
-    description: "",
+    title: task?.title || "",
+    description: task?.description || "",
     date: "",
     done: false,
     priority: false,
   });
+
+  console.log(formValues)
 
   function handleChange(
     event: ChangeEvent<HTMLInputElement & HTMLTextAreaElement>
@@ -33,12 +38,23 @@ export default function TaskForm() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    createTask?.(formValues);
+    !isEdit
+      ? createTask?.(formValues)
+      : updateTask?.({
+          id: oneTask?.id,
+          title: formValues.title,
+          description: formValues.description,
+          isPriority: formValues.priority,
+        });
   }
 
   return (
-    <StyledTaskForm onSubmit={handleSubmit} theme={theme}>
-      <h1>Create a Task</h1>
+    <StyledTaskForm
+      data-is-edit={String(isEdit)}
+      onSubmit={handleSubmit}
+      theme={theme}
+    >
+      <h1>{title}</h1>
       <div className="input-control">
         <label htmlFor="title">Title</label>
         <input
@@ -61,7 +77,7 @@ export default function TaskForm() {
           placeholder="Write a description"
         />
       </div>
-      <div className="input-control">
+      <div className="input-control date">
         <label htmlFor="date">Date</label>
         <input
           onChange={handleChange}
@@ -71,7 +87,7 @@ export default function TaskForm() {
           id="date"
         />
       </div>
-      <div className="input-control toggler">
+      <div className="input-control toggler complete">
         <label htmlFor="done">Toggle Done</label>
         <input
           onChange={handleChange}
@@ -86,6 +102,7 @@ export default function TaskForm() {
         <input
           value={String(formValues.priority)}
           onChange={handleChange}
+          // defaultChecked={task?.isPriority}
           type="checkbox"
           name="priority"
           id="priority"
@@ -93,7 +110,7 @@ export default function TaskForm() {
       </div>
 
       <div className="submit-btn flex justify-end">
-        <Button type="submit" name="Create Task" />
+        <Button type="submit" icon={plus} name={btnText} />
       </div>
     </StyledTaskForm>
   );

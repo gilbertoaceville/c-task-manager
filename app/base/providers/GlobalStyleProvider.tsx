@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import styled from "styled-components";
 
 export default function GlobalStyleProvider({
@@ -7,7 +8,13 @@ export default function GlobalStyleProvider({
 }: {
   children: React.ReactNode;
 }) {
-  return <GlobalStyles>{children}</GlobalStyles>;
+  const pathname = usePathname();
+  const pages = ["/sign-in", "/sign-up"];
+
+  const isAuthPage = pages.includes(pathname);
+  return (
+    <GlobalStyles data-is-auth={String(isAuthPage)}>{children}</GlobalStyles>
+  );
 }
 
 const GlobalStyles = styled.div`
@@ -20,6 +27,17 @@ const GlobalStyles = styled.div`
   @media screen and (max-width: 768px) {
     padding: 1rem;
     gap: 1rem;
+  }
+
+  &[data-is-auth="true"] {
+    @media screen and (max-width: 767px) {
+      padding: 0;
+      gap: 0;
+    }
+  }
+
+  .cl-internal-b3fm6y {
+    display: none;
   }
 
   .grid {

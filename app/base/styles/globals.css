@@ -7,6 +7,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --background-primary: #181818;
+  --background-secondary: #252525;
 
   --color-text-primary: #ffffff;
   --color-primary: #7263f3;
@@ -20,6 +21,7 @@
     --background-primary: #e7e7e7;
 
     --color-text-primary: #000000;
+    --background-secondary: #252525;
   }
 }
 

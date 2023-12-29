@@ -83,7 +83,7 @@ export async function PUT(req: Request) {
         status: 401,
       });
 
-    const { id, isDone } = await req.json();
+    const { id, isDone, title, description, priority } = await req.json();
 
     const updateTask = await prisma.task.update({
       where: {
@@ -91,6 +91,9 @@ export async function PUT(req: Request) {
       },
       data: {
         isDone,
+        title,
+        description,
+        isPriority: priority,
       },
     });
 
