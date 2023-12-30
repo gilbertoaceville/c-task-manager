@@ -54,13 +54,13 @@ export function UniversalProvider({
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
   const [oneTask, setOneTask] = useState<Task>({});
 
-  // const { data, mutate, isLoading } = useSWR(
-  //   fetchData ? "/api/tasks" : null,
-  //   fetcher,
-  //   {
-  //     revalidateIfStale: false,
-  //   }
-  // );
+  const { data, mutate, isLoading } = useSWR(
+    fetchData ? "/api/tasks" : null,
+    fetcher,
+    {
+      revalidateIfStale: false,
+    }
+  );
 
   const tasksData: Task[] = [
     {
@@ -77,7 +77,15 @@ export function UniversalProvider({
   ];
 
   // const results: Task[] = user ? data : [];
-  const tasks = tasksData
+  const tasks =
+    data?.length > 0
+      ? (data as Task[])?.sort((a, b) => {
+          // Use the nullish coalescing operator to handle potential undefined values
+          const dateA = new Date(a.createdAt ?? 0).getTime();
+          const dateB = new Date(b.createdAt ?? 0).getTime();
+          return dateB - dateA;
+        })
+      : [];
 
   async function createTask(formValues: any) {
     try {
@@ -89,7 +97,7 @@ export function UniversalProvider({
         toast.success("Created Task!");
       }
 
-      // mutate();
+      mutate();
       setModal(false);
     } catch (error) {
       console.log("Something is not right!", error);
@@ -101,7 +109,7 @@ export function UniversalProvider({
       const response = await axios.delete(`/api/tasks/${id}`);
       toast.success("Task Deleted");
 
-      // mutate();
+      mutate();
     } catch (error) {
       console.error(error);
       toast.error("Error deleting task");
@@ -120,7 +128,7 @@ export function UniversalProvider({
 
       if (editModal) setEditModal(false);
 
-      // mutate();
+      mutate();
     } catch (error) {
       console.error(error);
       toast.error("Error updating task");
@@ -136,16 +144,19 @@ export function UniversalProvider({
     setOneTask(task as Task);
   }
 
-  const doneTasks = tasks?.filter((task) => task?.isDone);
-  const priorityTasks = tasks?.filter((task) => task?.isPriority);
-  const incompleteTasks = tasks?.filter((task) => !task?.isDone);
+  const doneTasks =
+    tasks?.length > 0 ? tasks?.filter((task) => task?.isDone) : [];
+  const priorityTasks =
+    tasks?.length > 0 ? tasks?.filter((task) => task?.isPriority) : [];
+  const incompleteTasks =
+    tasks?.length > 0 ? tasks?.filter((task) => !task?.isDone) : [];
 
   return (
     <UniversalContext.Provider
       value={{
         theme: themes[indexOfSelectedTheme],
         tasks,
-        isLoading: false,
+        isLoading,
         doneTasks,
         oneTask,
         getOneTask,
