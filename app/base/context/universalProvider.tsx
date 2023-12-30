@@ -53,28 +53,9 @@ export function UniversalProvider({
   const [editModal, setEditModal] = useState(false);
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
   const [oneTask, setOneTask] = useState<Task>({});
+  // const [tasks, setTasks] = useState<Task[]>([])
 
-  const { data, mutate, isLoading } = useSWR(
-    fetchData ? "/api/tasks" : null,
-    fetcher,
-    {
-      revalidateIfStale: false,
-    }
-  );
-
-  const tasksData: Task[] = [
-    {
-      id: "12",
-      title: "Default title",
-      description: "Default description",
-      isDone: true,
-      isPriority: true,
-      date: "2023-12-28",
-      userId: "user_2aAHXx4gPzm4ePbYPabKtnicxCB",
-      createdAt: "2023-12-29T11:35:51.237+00:00",
-      updatedAt: "2023-12-29T11:35:51.237+00:00",
-    },
-  ];
+  const { data, mutate, isLoading } = useSWR("/api/tasks", fetcher);
 
   const results: Task[] = user ? data : [];
   const tasks =
@@ -86,6 +67,8 @@ export function UniversalProvider({
           return dateB - dateA;
         })
       : [];
+
+console.log({ data, tasks, results });
 
   async function createTask(formValues: any) {
     try {
