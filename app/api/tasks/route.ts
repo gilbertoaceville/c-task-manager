@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
     if (!userId)
       return NextResponse.json({
-        error: "You are not authorized",
+        error: "User is not authorized",
         status: 401,
       });
 
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
     if (!title || !description || !date)
       return NextResponse.json({
-        error: "Required fields not found",
+        error: "Missing required fields",
         status: 400,
       });
 
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.log("Error creating task:", error);
     return NextResponse.json({
-      error: "Failed! Could not create task",
+      error: "Could not create task!",
       status: 500,
     });
   }
@@ -53,7 +53,7 @@ export async function GET() {
 
     if (!userId)
       return NextResponse.json({
-        error: "You are not authorized",
+        error: "User is not authorized",
         status: 401,
       });
 
@@ -67,7 +67,7 @@ export async function GET() {
   } catch (error) {
     console.log("Error getting task:", error);
     return NextResponse.json({
-      error: "Failed! Could not get task",
+      error: "Could not get task1",
       status: 500,
     });
   }
@@ -79,7 +79,7 @@ export async function PUT(req: Request) {
 
     if (!userId)
       return NextResponse.json({
-        error: "You are not authorized",
+        error: "User is not authorized",
         status: 401,
       });
 
@@ -101,7 +101,7 @@ export async function PUT(req: Request) {
   } catch (error) {
     console.log("Error updating task:", error);
     return NextResponse.json({
-      error: "Failed! Could not update task",
+      error: "Could not update task!",
       status: 500,
     });
   }

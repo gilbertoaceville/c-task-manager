@@ -12,7 +12,7 @@ export async function DELETE(req: Request, { params }: ParamsProps) {
 
     if (!userId)
       return NextResponse.json({
-        error: "Not authorized to delete",
+        error: "User is not authorized",
         status: 401,
       });
 
@@ -26,7 +26,7 @@ export async function DELETE(req: Request, { params }: ParamsProps) {
   } catch (error) {
     console.log("Error deleting task:", error);
     return NextResponse.json({
-      error: "Failed! Could not delete task",
+      error: "Could not delete task!",
       status: 500,
     });
   }
