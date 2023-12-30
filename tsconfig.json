@@ -20,8 +20,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["app/*"],
-      "@@/*": ["public/*"]
+      "@/*": ["app/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/base/context/universalProvider.tsx"],
