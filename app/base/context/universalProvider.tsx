@@ -47,23 +47,37 @@ export function UniversalProvider({
   children: React.ReactNode;
   fetchData?: boolean;
 }) {
-  const { user } = useUser();
+  // const { user } = useUser();
   const [indexOfSelectedTheme, setIndexOfSelectedTheme] = useState(0);
   const [modal, setModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
   const [oneTask, setOneTask] = useState<Task>({});
 
-  const { data, mutate, isLoading } = useSWR(
-    fetchData ? "/api/tasks" : null,
-    fetcher,
-    {
-      revalidateIfStale: false,
-    }
-  );
+  // const { data, mutate, isLoading } = useSWR(
+  //   fetchData ? "/api/tasks" : null,
+  //   fetcher,
+  //   {
+  //     revalidateIfStale: false,
+  //   }
+  // );
 
-  const results: Task[] = user ? data : [];
-  const tasks = isLoading ? [] : results;
+  const tasksData: Task[] = [
+    {
+      id: "12",
+      title: "Default title",
+      description: "Default description",
+      isDone: true,
+      isPriority: true,
+      date: "2023-12-28",
+      userId: "user_2aAHXx4gPzm4ePbYPabKtnicxCB",
+      createdAt: "2023-12-29T11:35:51.237+00:00",
+      updatedAt: "2023-12-29T11:35:51.237+00:00",
+    },
+  ];
+
+  // const results: Task[] = user ? data : [];
+  const tasks = tasksData
 
   async function createTask(formValues: any) {
     try {
@@ -75,7 +89,7 @@ export function UniversalProvider({
         toast.success("Created Task!");
       }
 
-      mutate();
+      // mutate();
       setModal(false);
     } catch (error) {
       console.log("Something is not right!", error);
@@ -87,7 +101,7 @@ export function UniversalProvider({
       const response = await axios.delete(`/api/tasks/${id}`);
       toast.success("Task Deleted");
 
-      mutate();
+      // mutate();
     } catch (error) {
       console.error(error);
       toast.error("Error deleting task");
@@ -106,7 +120,7 @@ export function UniversalProvider({
 
       if (editModal) setEditModal(false);
 
-      mutate();
+      // mutate();
     } catch (error) {
       console.error(error);
       toast.error("Error updating task");
@@ -131,7 +145,7 @@ export function UniversalProvider({
       value={{
         theme: themes[indexOfSelectedTheme],
         tasks,
-        isLoading,
+        isLoading: false,
         doneTasks,
         oneTask,
         getOneTask,
