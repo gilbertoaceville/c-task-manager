@@ -22,8 +22,6 @@ export default function TaskForm({ isEdit, title, btnText }: TaskFormProps) {
     priority: false,
   });
 
-  console.log(formValues)
-
   function handleChange(
     event: ChangeEvent<HTMLInputElement & HTMLTextAreaElement>
   ) {
@@ -102,7 +100,7 @@ export default function TaskForm({ isEdit, title, btnText }: TaskFormProps) {
         <input
           value={String(formValues.priority)}
           onChange={handleChange}
-          // defaultChecked={task?.isPriority}
+          defaultChecked={task?.isPriority}
           type="checkbox"
           name="priority"
           id="priority"
