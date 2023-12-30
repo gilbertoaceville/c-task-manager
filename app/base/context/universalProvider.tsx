@@ -63,14 +63,7 @@ export function UniversalProvider({
   );
 
   const results: Task[] = user ? data : [];
-  const tasks = isLoading
-    ? []
-    : results?.sort((a, b) => {
-        // Use the nullish coalescing operator to handle potential undefined values
-        const dateA = new Date(a.createdAt ?? 0).getTime();
-        const dateB = new Date(b.createdAt ?? 0).getTime();
-        return dateB - dateA;
-      });
+  const tasks = isLoading ? [] : results;
 
   async function createTask(formValues: any) {
     try {
@@ -111,7 +104,7 @@ export function UniversalProvider({
         toast.success("Task Updated");
       }
 
-      if(editModal) setEditModal(false);
+      if (editModal) setEditModal(false);
 
       mutate();
     } catch (error) {
