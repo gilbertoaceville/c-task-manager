@@ -3,6 +3,7 @@ import {
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import useSWR from "swr";
@@ -53,22 +54,44 @@ export function UniversalProvider({
   const [editModal, setEditModal] = useState(false);
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
   const [oneTask, setOneTask] = useState<Task>({});
-  // const [tasks, setTasks] = useState<Task[]>([])
 
-  const { data, mutate, isLoading } = useSWR("/api/tasks", fetcher);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const results: Task[] = user ? data : [];
-  const tasks =
-    results?.length > 0
-      ? results?.sort((a, b) => {
-          // Use the nullish coalescing operator to handle potential undefined values
-          const dateA = new Date(a.createdAt ?? 0).getTime();
-          const dateB = new Date(b.createdAt ?? 0).getTime();
-          return dateB - dateA;
-        })
-      : [];
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-console.log({ data, tasks, results });
+  // const { data, mutate, isLoading } = useSWR("/api/tasks", fetcher);
+
+  // const results: Task[] = user ? data : [];
+  // const tasks =
+  //   results?.length > 0
+  //     ? results?.sort((a, b) => {
+  //         // Use the nullish coalescing operator to handle potential undefined values
+  //         const dateA = new Date(a.createdAt ?? 0).getTime();
+  //         const dateB = new Date(b.createdAt ?? 0).getTime();
+  //         return dateB - dateA;
+  //       })
+  //     : [];
+
+  console.log({ tasks });
+
+  const allTasks = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get("/api/tasks");
+
+      const sorted = res.data.sort((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+
+      setTasks(sorted);
+
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   async function createTask(formValues: any) {
     try {
@@ -80,7 +103,7 @@ console.log({ data, tasks, results });
         toast.success("Created Task!");
       }
 
-      mutate();
+      allTasks();
       setModal(false);
     } catch (error) {
       console.log("Something is not right!", error);
@@ -92,7 +115,7 @@ console.log({ data, tasks, results });
       const response = await axios.delete(`/api/tasks/${id}`);
       toast.success("Task Deleted");
 
-      mutate();
+      allTasks();
     } catch (error) {
       console.error(error);
       toast.error("Error deleting task");
@@ -111,7 +134,7 @@ console.log({ data, tasks, results });
 
       if (editModal) setEditModal(false);
 
-      mutate();
+      allTasks();
     } catch (error) {
       console.error(error);
       toast.error("Error updating task");
@@ -133,6 +156,10 @@ console.log({ data, tasks, results });
     tasks?.length > 0 ? tasks?.filter((task) => task?.isPriority) : [];
   const incompleteTasks =
     tasks?.length > 0 ? tasks?.filter((task) => !task?.isDone) : [];
+
+  useEffect(() => {
+    if (user) allTasks();
+  }, [user]);
 
   return (
     <UniversalContext.Provider
