@@ -47,7 +47,7 @@ export function UniversalProvider({
   children: React.ReactNode;
   fetchData?: boolean;
 }) {
-  // const { user } = useUser();
+  const { user } = useUser();
   const [indexOfSelectedTheme, setIndexOfSelectedTheme] = useState(0);
   const [modal, setModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -76,10 +76,10 @@ export function UniversalProvider({
     },
   ];
 
-  // const results: Task[] = user ? data : [];
+  const results: Task[] = user ? data : [];
   const tasks =
-    data?.length > 0
-      ? (data as Task[])?.sort((a, b) => {
+    results?.length > 0
+      ? results?.sort((a, b) => {
           // Use the nullish coalescing operator to handle potential undefined values
           const dateA = new Date(a.createdAt ?? 0).getTime();
           const dateB = new Date(b.createdAt ?? 0).getTime();
