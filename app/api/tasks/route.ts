@@ -1,4 +1,5 @@
 import prisma from "@/base/lib/prisma/client";
+import { redis } from "@/base/lib/redis/redis";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
@@ -57,11 +58,25 @@ export async function GET() {
         status: 401,
       });
 
+    const cachedValue = await redis.get("tasks");
+
+    if (cachedValue) {
+      return NextResponse.json(cachedValue);
+    }
+
     const tasks = await prisma.task.findMany({
       where: {
         userId,
       },
     });
+
+    if (!tasks)
+      return NextResponse.json({
+        error: "Tasks not found",
+        status: 404,
+      });
+
+    await redis.set("tasks", JSON.stringify(tasks));
 
     return NextResponse.json(tasks);
   } catch (error) {
