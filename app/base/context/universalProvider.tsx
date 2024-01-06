@@ -63,8 +63,7 @@ export function UniversalProvider({
   );
 
   const results: Task[] = user ? data : [];
-  const parsedResults: Task[] = typeof results === "string" ? JSON.parse(results) : results;
-  const tasks = parsedResults?.sort((a, b) => {
+  const tasks = results?.sort((a, b) => {
     const dateA = new Date(a.createdAt ?? 0).getTime();
     const dateB = new Date(b.createdAt ?? 0).getTime();
     return dateB - dateA;
